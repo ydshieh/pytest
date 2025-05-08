@@ -174,22 +174,31 @@ def main(
             try:
                 ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
                 try:
+                    print(f"_pytest/config/__init__.py', lineno=175::main() | `pytest_cmdline_main` returns {ExitCode(ret)}")
+                    sys.stdout.flush()
                     return ExitCode(ret)
                 except ValueError:
+                    print(f"_pytest/config/__init__.py', lineno=183::main() | finish `ValueError` and returns {ret}")
+                    sys.stdout.flush()
                     return ret
             finally:
                 config._ensure_unconfigure()
+                print(f"_pytest/config/__init__.py', lineno=185::main() | finish `finally` and `config._ensure_unconfigure` returns")
+                sys.stdout.flush()
     except UsageError as e:
         tw = TerminalWriter(sys.stderr)
         for msg in e.args:
             tw.line(f"ERROR: {msg}\n", red=True)
+        print(f"_pytest/config/__init__.py', lineno=194::main() | finish `UsageError` and returns {ExitCode.USAGE_ERROR}")
+        sys.stdout.flush()
         return ExitCode.USAGE_ERROR
     finally:
         if old_pytest_version is None:
             os.environ.pop("PYTEST_VERSION", None)
         else:
             os.environ["PYTEST_VERSION"] = old_pytest_version
-
+        print(f"_pytest/config/__init__.py', lineno=200::main() | finish `finally`")
+        sys.stdout.flush()
 
 def console_main() -> int:
     """The CLI entry point of pytest.
@@ -199,6 +208,7 @@ def console_main() -> int:
     # https://docs.python.org/3/library/signal.html#note-on-sigpipe
     try:
         code = main()
+        print(f"_pytest/config/__init__.py', lineno=210::console_main() | `main` returns {code}")
         sys.stdout.flush()
         return code
     except BrokenPipeError:
@@ -206,6 +216,7 @@ def console_main() -> int:
         # to devnull to avoid another BrokenPipeError at shutdown
         devnull = os.open(os.devnull, os.O_WRONLY)
         os.dup2(devnull, sys.stdout.fileno())
+        print(f"_pytest/config/__init__.py', lineno=220::console_main() | Get {BrokenPipeError} and return `1`")
         return 1  # Python exits with error code 1 on EPIPE
 
 
