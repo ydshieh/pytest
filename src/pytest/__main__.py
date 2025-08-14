@@ -21,4 +21,7 @@ if __name__ == "__main__":
     
     sys.stdout.flush()
 
-    raise SystemExit(code)
+    import os
+    os._exit(code)
+
+    # raise SystemExit(code)
