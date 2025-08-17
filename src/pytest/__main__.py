@@ -24,4 +24,7 @@ if __name__ == "__main__":
     # import os
     # os._exit(code)
 
+    import time
+    time.sleep(180)
+
     raise SystemExit(code)
